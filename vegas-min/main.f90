@@ -1,35 +1,24 @@
 ! define a variable in global scope
 module radius
-  use nrtype
   implicit none
-  real(sp) :: rad
+  double precision :: rad
 end module radius
 
 
 
 ! main program
 program main
-  use nr, only:vegas
+  use vint
   use radius
   implicit none
   ! vegas necessary variables
   integer :: init,itmax,ncall,ndim,nprn
-  real(sp) :: avgi,chi2a,sd
-  real(sp), dimension(20) :: region
-  ! interface for the integrand function
-  interface
-  function fxn(pt,wgt)
-  use nrtype
-  implicit none
-  real(sp), dimension(:), intent(in) :: pt
-  real(sp), intent(in) :: wgt
-  real(sp) :: fxn
-  end function fxn
-  end interface
+  real(wp) :: avgi,chi2a,sd
+  real(wp), dimension(20) :: region
   ! set coefficients
   ndim = 3
   rad = 1.0
-  ncall = 100000
+  ncall = 1000000
   itmax = 1
   nprn = -1
   region(1:ndim) = 0.0
@@ -50,12 +39,11 @@ end program main
 
 ! integrand function
 function fxn(pt,wgt)
-  use nrtype
   use radius
   implicit none
-  real(sp), dimension(:), intent(in) :: pt
-  real(sp), intent(in) :: wgt
-  real(sp) :: fxn
+  double precision, dimension(:), intent(in) :: pt
+  double precision, intent(in) :: wgt
+  double precision :: fxn
   fxn = 0.0
   ! using rejection sampling (Euclidean norm)
   if( sum(pt(:)**2) .lt. rad**2 ) fxn = 1.0
