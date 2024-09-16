@@ -1,4 +1,6 @@
+! vegas integration module
 module vint
+
   use, intrinsic :: iso_fortran_env, only: int32
   use, intrinsic :: iso_fortran_env, only: real64
   implicit none
@@ -12,6 +14,11 @@ module vint
   INTEGER(int32), DIMENSION(:,:), POINTER, SAVE :: ranseeds
   INTEGER(int32), DIMENSION(:), POINTER, SAVE :: iran,jran,kran,nran,mran,ranv
   REAL(wp), SAVE :: amm
+  ! variables below need to be set in main program
+  integer :: init,itmax,ncall,ndim,nprn
+  real(wp) :: avgi,chi2a,sd
+  real(wp), dimension(20) :: region
+  ! variables above need to be set in main program
   INTERFACE reallocate
     MODULE PROCEDURE reallocate_iv,reallocate_im
   END INTERFACE
@@ -23,7 +30,9 @@ module vint
     double precision :: fxn
     end function fxn
   end interface
-  public :: wp,PI,vegas,fxn
+  public :: init,itmax,ncall,ndim,nprn
+  public :: avgi,chi2a,sd,region
+  public :: vegas,fxn
 
 contains
 
