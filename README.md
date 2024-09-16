@@ -4,7 +4,9 @@ Fortran modules for High Energy Physics
 
 The modules are separated in folders, most of them with corresponding main program.
 
-It can be compiled with the following code:
+It can be compiled with the following 'makefile':
+
+
 
 
 Listed below are some common modules that are useful in high energy physics calculations:
