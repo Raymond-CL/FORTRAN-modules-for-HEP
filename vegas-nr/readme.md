@@ -47,8 +47,8 @@ The main example program that I have written calculates the volume of a n-sphere
 - `init=+1` then runs vegas with high `ncall` and low `itmax` to achieve high precision
 - the calculation takes into account the symmetry in cartesian coordinates and integrates from $[0,R]$, a final symmetry factor is multiplied
 
-The actual volume is 
+The actual volume of an $n$-dimensional sphere with radius $R$ is:
 
 ```math
-\frac{\pi^{n/2}}{\Gamma(\frac{n}{2}+1)}~R^{n}
+V(n,R)=\frac{\pi^{n/2}}{\Gamma(\frac{n}{2}+1)}~R^{n}
 ```
