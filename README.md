@@ -12,8 +12,12 @@ If you have fortran compiler setup, just create a folder have copy the module fi
 ### usage
 copy the module file `<module_name>.f90` into the same directory as your main program `main.f90`.  
 It can then be compiled with the following code (assuming `gfortran` is your favourite compiler):  
-`gfortran -c <module_name>.f90 main.f90`  
-`gfortran -o <my_program> *.o`  
+```
+gfortran -c <module_name>.f90 main.f90
+```
+```
+gfortran -o <my_program> *.o
+```
 *note that some modules might need extra compiler flags in order for it to work.*
 
 ### dependencies
