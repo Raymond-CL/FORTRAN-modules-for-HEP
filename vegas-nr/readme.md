@@ -22,10 +22,9 @@ need to use compiler flag `-fno-strict-overflow`
     vegas.o : nrtype.o nr.o
     main.o : nrtype.o nr.o
 
-Therefore, one should compile with the following:
-
-    gfortran -c -fno-strict-overflow nrtype.f90 nr.f90 nrutil.f90 ran_state.f90 ran1.f90 vegas.f90 main.f90
-    gfortran -o vegas.exe *.o
+Therefore, one should compile with the following:  
+`gfortran -c -fno-strict-overflow nrtype.f90 nr.f90 nrutil.f90 ran_state.f90 ran1.f90 vegas.f90 main.f90`  
+`gfortran -o vegas.exe *.o`
 
 ### main
 The main program calculates the volume of a n-sphere using VEGAS
