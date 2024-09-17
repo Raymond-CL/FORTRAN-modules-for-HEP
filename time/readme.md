@@ -2,7 +2,8 @@
 
 ### description
 
-a module with convenient subroutine that records program starting and ending times and displays the duration of the run
+A module with convenient subroutines that records program starting and ending times and displays the duration of the run.  
+It can also be used as a stopwatch.
 
 ### note
 
@@ -14,11 +15,7 @@ a module with convenient subroutine that records program starting and ending tim
 ### main
 
 The main example I have written calculates the n-th prime number with n>=1  
-The algorithm is not very efficient because it does not utilize the prime number theorem.
+The algorithm is not very efficient because it does not utilize the [prime number theorem](https://en.wikipedia.org/wiki/Prime_number_theorem).
 The prime numbers are found by iteration and stored in a dynamic array.
 For n=1, 2 is displayed. For n=2, 3 is displayed.
-For n>2, the code checks all odd numbers to see if it can be divided by existing primes.  
-a subroutine is called at the beginning and ending of the program,  
-then calls the print subroutine to display the duration between the two times.  
-One can use it as a stopwatch by calling the stop subroutine at desired locations.  
-By calling the start subroutine, one resets the stopwatch.
+For n>2, the code checks all odd numbers to see if it can be divided by existing primes. 
