@@ -36,6 +36,19 @@ The following [Link](https://fortranwiki.org/fortran/show/Build+tools) provides 
 ### modules
 
 Listed below are some common modules that are useful in high energy physics calculations:  
+- `glauber-opt`
+
+
+- `glauber-mc`
+
+
+- `time`
+
+  a module with subroutines that can keep track of program start/stop time and run durations
+  
+- `vec2D`
+
+
 - `vegas-nr`
 
   VEGAS multi-dimensional Monte Carlo integration subroutine developed by "Numerical Recipe"
@@ -44,8 +57,4 @@ Listed below are some common modules that are useful in high energy physics calc
 
   a mininum VEGAS module based on `vegas-nr` that is self-contained in a single module file
 
-- `glauber-opt`
-- `glauber-mc`
-- `time`
-- `vec2D`
 - `VISH-wc`
