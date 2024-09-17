@@ -28,14 +28,14 @@ contains
     walltime = real(count_stop-count_start,real64)/count_rate
     write(stdout,99)
     write(stdout,11) v0(1:3),v0(5:8)
-11  format(' time started at: ',i4,'/',i2,'/',i2,' - ',i2,':',i2,':',i2,':',i3)
     write(stdout,12) v1(1:3),v1(5:8)
-12  format(' time stopped at: ',i4,'/',i2,'/',i2,' - ',i2,':',i2,':',i2,':',i3)
     write(stdout,13) cputime
-13  format(' CPU  time elapsed: ',f10.2, ' seconds.')
     write(stdout,14) walltime
-14  format(' Wall time elapsed: ',f10.2, ' seconds.')
     write(stdout,99)
+11  format(' time started at: ',i4,'/',i2,'/',i2,' - ',i2,':',i2,':',i2,':',i3)
+12  format(' time stopped at: ',i4,'/',i2,'/',i2,' - ',i2,':',i2,':',i2,':',i3)
+13  format(' CPU  time elapsed: ',f10.2, ' seconds.')
+14  format(' Wall time elapsed: ',f10.2, ' seconds.')
 99  format(72('*'))
   end subroutine print_time
 
