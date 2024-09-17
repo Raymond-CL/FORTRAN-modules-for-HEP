@@ -2,7 +2,7 @@
 module vint
 
   use, intrinsic :: iso_fortran_env, only: int32
-  use, intrinsic :: iso_fortran_env, only: real64
+  use, intrinsic :: iso_fortran_env, only: real32,real64
   implicit none
   private
   integer, parameter :: wp = real64
