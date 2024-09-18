@@ -87,7 +87,7 @@ contains
   call hydroReadInfo2D(tau,xp,yp,e,s,T,Bd,vx,vy)
   ! no quenching after freezeout
   if(T.lt.Tc) return
-  func = T**3
+  func = T**3 * tau
   return
   end function func
 
