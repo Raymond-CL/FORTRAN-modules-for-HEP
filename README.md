@@ -57,7 +57,7 @@ Listed below are some common modules that are useful in high energy physics calc
 
   a mininum VEGAS module based on `vegas-nr` that is self-contained in a single module file
 
-- `vish-gen`
+- `vish_gen`
 
   generates a 3d table of parton quenching paths using Viscous Israel-Stewart Hydrodynamics
 
