@@ -44,3 +44,8 @@ One can compile with the following:
 ```
 gfortran -c -fno-strict-overflow -fno-align-commons JetOutput-0.8.for vint.f90 vish_gen.f90 main.f90
 ```
+
+### in-progress
+
+Current module uses generic format to output data. It can be modified to use binary or HDF5 as output. However, the increase in
+speed will not be significant since 

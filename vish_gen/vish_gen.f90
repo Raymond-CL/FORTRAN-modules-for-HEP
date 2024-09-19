@@ -4,7 +4,7 @@ module vish_gen
   private
   double precision, parameter :: PI = 4d0*atan(1d0)
   ! output data file name
-  character(20), parameter :: ofile = "output.dat"
+  character(20), parameter :: ofile = "vish.dat"
   ! define hydro boundaries
   double precision, parameter :: tau0 = 0.6d0
   double precision, parameter :: taumax = 40d0
