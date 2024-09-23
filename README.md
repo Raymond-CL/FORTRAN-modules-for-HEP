@@ -39,7 +39,7 @@ Listed below are some common modules that are useful in high energy physics calc
 
 - `gauss`
 
-  a standalone Gauss-Legendre quadrature subroutine with 2, 4, 8, 16, 32, and 64 points.
+  a standalone Gauss-Legendre quadrature subroutine with 4, 8, 16, 32, and 64 points.
  
 - `glauber-opt`
 
