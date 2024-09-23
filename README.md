@@ -37,15 +37,19 @@ The following [Link](https://fortranwiki.org/fortran/show/Build+tools) provides 
 
 Listed below are some common modules that are useful in high energy physics calculations: 
 
+- `color`
+
+  a simple module that allow colored output to the terminal
+
 - `gauss`
 
   a standalone Gauss-Legendre quadrature subroutine with 4, 8, 16, 32, and 64 points.
  
-- `glauber-opt`
+- `glauber_opt`
 
   optical Glauber subroutine
 
-- `glauber-mc`
+- `glauber_mc`
 
   Monte Carlo Glauber subroutine
 
@@ -53,15 +57,15 @@ Listed below are some common modules that are useful in high energy physics calc
 
   a module with subroutines that can keep track of program start/stop time and run durations
   
-- `vec2D`
+- `vec_2D`
 
   a 2D vector class with vector opeartion methods
 
-- `vegas-nr`
+- `vegas_nr`
 
   VEGAS multi-dimensional Monte Carlo integration subroutine developed by "Numerical Recipe"
   
-- `vegas-min`
+- `vint`
 
   a mininum VEGAS module based on `vegas-nr` that is self-contained in a single module file
 
