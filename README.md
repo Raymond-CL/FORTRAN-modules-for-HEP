@@ -35,12 +35,19 @@ The following [Link](https://fortranwiki.org/fortran/show/Build+tools) provides 
 
 ### modules
 
-Listed below are some common modules that are useful in high energy physics calculations:  
+Listed below are some common modules that are useful in high energy physics calculations: 
+
+- `gauss`
+
+  a standalone Gauss-Legendre quadrature subroutine with 2, 4, 8, 16, 32, and 64 points.
+ 
 - `glauber-opt`
 
+  optical Glauber subroutine
 
 - `glauber-mc`
 
+  Monte Carlo Glauber subroutine
 
 - `time`
 
@@ -48,6 +55,7 @@ Listed below are some common modules that are useful in high energy physics calc
   
 - `vec2D`
 
+  a 2D vector class with vector opeartion methods
 
 - `vegas-nr`
 
