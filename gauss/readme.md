@@ -27,6 +27,10 @@ do i = 1, n
 enddo
 ```
 
+### note
+
+- The current `gauss` module uses Gauss-Legendre quadrature only, suitable for integrals which is somewhat smooth in the middle of the integration range, and fast changing at the end point $a,b$.
+- Future implementations will also include Gauss-Jacobi, Gauss-Chebyshev, Gauss-Laguerre, and possibly Gauss-Hermite quadratures.
 
 ### dependencies
 
