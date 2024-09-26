@@ -41,7 +41,7 @@ contains
     nucA=A;   nucZ=82;    nucN=nucA-nucZ
     c=6.62d0;   z=0.546d0;  w=0d0
     rho0=0.15962d0
-  elseif(A.eq.197) then   ! Au-197
+  elseif(A.eq.197) then   ! Au-197: 293.35d0
     nucA=A;   nucZ=79;    nucN=nucA-nucZ
     c=6.38d0;   z=0.535d0;  w=0d0
     rho0=0.169346d0

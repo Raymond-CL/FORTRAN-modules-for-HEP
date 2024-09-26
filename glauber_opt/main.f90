@@ -3,18 +3,18 @@ program main
   use vint  ! uses vegas integration module
   use glauber_opt
   implicit none
-  call setgeo(208)
+  call setgeo(197)
   call time_start
   ! set vegas parameters
   ndim = 2
   ncall = 1000000
   itmax = 1
   nprn = -1
-  region(1) = -20d0
-  region(2) = -20d0
+  region(1) = -40d0
+  region(2) = -40d0
   !region(3) = 0d0
-  region(3) = +20d0
-  region(4) = +20d0
+  region(3) = +40d0
+  region(4) = +40d0
   !region(6) = 8d0*atan(1d0)
   init = -1
   call vegas(region(1:2*ndim),fxn,init,ncall,10*itmax,nprn,avgi,sd,chi2a)

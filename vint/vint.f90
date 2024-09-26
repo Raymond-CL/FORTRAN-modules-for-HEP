@@ -6,7 +6,7 @@ module vint
   implicit none
   private
   integer, parameter :: wp = real64
-  real(wp), parameter :: PI=3.141592653589793238462643383279502884197_wp
+  !real(wp), parameter :: PI=3.141592653589793238462643383279502884197_wp
   INTEGER(int32), PARAMETER :: NPAR_ARTH=16,NPAR2_ARTH=8
   INTEGER(int32), PARAMETER :: hg=huge(1_int32), hgm=-hg, hgng=hgm-1
   INTEGER(int32), SAVE :: lenran=0, seq=0
