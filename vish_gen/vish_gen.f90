@@ -32,7 +32,7 @@ contains
   ! call internal data file reader
   call hydroSetFiles()
   ! read profile first to get T0
-  call hydroReadInfo2D(tau0,0d0,0d0,e,s,T0,Bd,vx,vy)
+  call hydroReadInfo2DZeroOnErr(tau0,0d0,0d0,e,s,T0,Bd,vx,vy)
   end subroutine Hydro_Set
 
   ! table generation subroutine
@@ -50,6 +50,7 @@ contains
   ! begin loop
   do i = -xyn,+xyn
     do j = -xyn,+xyn
+      !write(*,*) "working on:",real(i*xybin),real(j*xybin)
       open(u,file=ofile,status="old",position="append")
       do k = 1,thn
         ! define loop variables
@@ -84,7 +85,7 @@ contains
   xp = x + tau*cos(th)
   yp = y + tau*sin(th)
   ! read temperature info, no need for the rest
-  call hydroReadInfo2D(tau,xp,yp,e,s,T,Bd,vx,vy)
+  call hydroReadInfo2DZeroOnErr(tau,xp,yp,e,s,T,Bd,vx,vy)
   ! no quenching after freezeout
   if(T.lt.Tc) return
   func = T**3 * tau

@@ -1,16 +1,17 @@
 module histogram
 
-  use, intrinsic :: iso_fortran_env, only: wp=> real64
-  use, intrinsic :: iso_fortran_env, only: ip=> int8
-  use, intrinsic :: iso_fortran_env, only: ip2=> int64
+  use, intrinsic :: iso_fortran_env, only : wp => real64
+  use, intrinsic :: iso_fortran_env, only : ip => int32   !max:32767
+  use, intrinsic :: iso_fortran_env, only : ip2 => int64  !max:9E19
   implicit none
   private
-  type, public :: hist
+  ! declare hist class
+  type :: hist
     private
     integer(ip) :: ind,histsize
     integer(ip2) :: hitcount,misscount
     logical :: logplot
-    character(len=40)  :: title
+    character(len=50) :: title
     real(wp) :: histmin,histmax,histbin
     real(wp) :: total
     real(wp), allocatable :: histdata(:)
@@ -20,144 +21,103 @@ module histogram
     procedure, public :: fillh => fillhist
     procedure, public :: printh => printhist
   end type hist
-  
-  contains
-  
+  ! every everything except the hist class and its module procedures
+  public :: hist
+
+contains
+
+  ! function to retrieve index of histogram
   function getind(this) result(i)
   class(hist), intent(in) :: this
-  integer(i4b) :: i
+  integer(ip) :: i 
   i = this%ind
   end function getind
-  
-  subroutine sethist(this,i,islog,s,n,hmin,hmax)
+
+  ! initial setting of the histogram
+  subroutine sethist(this,i,islog,t,n,hmin,hmax)
   class(hist), intent(inout) :: this
-  integer(i4b), intent(in) :: i,n
+  integer(ip), intent(in) :: i,n
   logical, intent(in) :: islog
-  character(len=*), intent(in) :: s
-  real(sp), intent(in) :: hmin,hmax
-  integer(i1b) :: err
+  character(len=*), intent(in) :: t
+  real(wp), intent(in) :: hmin,hmax
+  integer(ip) :: err
   this%ind = i
   this%logplot = islog
-  this%title = s
+  this%title = t
   this%histsize = n
-  allocate(this%histdata(n),stat=err) ! dynamic hist. allocate
+  allocate(this%histdata(n),stat=err)
   if(err.ne.0) then
-        write(*,*) 'mem allocation err @ histogram mod:',err
-        call exit(4)
+    write(*,*) "memory allocation error!",err
+    call exit(1)
   endif
-  this%histdata = 0.0 ! important to initialize first
-  this%histmin = hmin
-  this%histmax = hmax
-  if(this%logplot) then
-        if(this%histmin .le. 0d0) then
-        write(*,*) 'histmin<=0 for logplot, reset to 1E-10.'
-        this%histmin = 1e-10
-        endif
-        this%histbin = (log(this%histmax)-log(this%histmin))/this%histsize
+  this%histdata = 0d0
+  if(hmin.lt.hmax) then
+    this%histmin = hmin;  this%histmax = hmax
   else
-        this%histbin = (this%histmax-this%histmin)/this%histsize
+    this%histmin = hmax;  this%histmax = hmin
+  endif
+  if(this%logplot) then
+    if(this%histmin.le.0d0) then
+      write(*,*) "histmin<=0 for logplot, setting to 1E-10."
+      this%histmin = 1d-10
+    endif
+    this%histbin = log(this%histmax/this%histmin)/this%histsize
+  else
+    this%histbin = (this%histmax-this%histmin)/this%histsize
   endif
   this%hitcount = 0
   this%misscount = 0
-  this%total = 0.0
+  this%total = 0d0
   end subroutine sethist
-  
+
+  ! entry filling
   subroutine fillhist(this,x,y)
   class(hist), intent(inout) :: this
-  real(sp), intent(in) :: x,y
-  integer(i1b) :: i
+  real(wp), intent(in) :: x,y
+  integer(ip) :: i
   if(x.lt.this%histmin .or. x.ge.this%histmax) then
-        this%misscount = this%misscount + 1
+    this%misscount = this%misscount + 1
   else
-        if(this%logplot) then
-        i = floor( (log(x)-log(this%histmin))/this%histbin+1 )
-        if(i.le.0) write(*,*) i,x,y
-        this%histdata(i) = this%histdata(i) + y
-        else
-        i = floor( (x-this%histmin)/this%histbin+1 )
-        if(i.le.0) write(*,*) i,x,y
-        this%histdata(i) = this%histdata(i) + y
-        endif
-        this%hitcount = this%hitcount + 1
+    if(this%logplot) then
+      i = floor( log(x/this%histmin)/this%histbin + 1 )
+    else
+      i = floor( (x-this%histmin)/this%histbin + 1 )
+    endif
+    this%histdata(i) = this%histdata(i) + y
+    this%hitcount = this%hitcount + 1
   endif
   end subroutine fillhist
-  
+
+  ! print histogram
   subroutine printhist(this,u)
   class(hist), intent(inout) :: this
-  integer(i4b) :: u,i
-  real(sp) :: histL,histR,histmid
+  integer, intent(in) :: u
+  integer(ip) :: i
+  real(wp) :: histL,histR,histM,eff
   character(len=*), parameter :: tab=char(9)
-  write(u,*) 'histogram number:',this%ind
-  write(u,*) 'title:',trim(this%title)
-  write(u,*) 'hit:',this%hitcount,'miss:',this%misscount
-  write(u,*) 'efficiency:',real(this%hitcount) * 100.0 / real(this%hitcount+this%misscount),'%'
-  write(u,*) 'bin-left',tab,tab,'bin-mid',tab,tab,'bin-right',tab,'result'
-  this%total = 0.0
-  do i = 1,this%histsize
-        if(this%logplot) then
-        histL = this%histmin * exp((i-1)*this%histbin)
-        histR = this%histmin * exp(i*this%histbin)
-        histmid = (histL + histR)/2d0
-        write(u,*) histL,histmid,histR,this%histdata(i)/(histR-histL)
-        else
-        histL = this%histmin + (i-1)*this%histbin
-        histR = this%histmin + i*this%histbin
-        histmid = (histL + histR)/2d0
-        write(u,*) histL,histmid,histR,this%histdata(i)/this%histbin
-        endif
-        this%total = this%total + this%histdata(i)
+  write(u,'(a,i5)') "histogram index:",this%ind
+  write(u,*) "title :",tab,trim(this%title)
+  write(u,*) "hits  :",this%hitcount
+  write(u,*) "misses:",this%misscount
+  eff = real(this%hitcount*100d0/(this%hitcount+this%misscount))
+  if(this%hitcount .eq. 0) eff = 0d0
+  write(u,'(a,f10.2,a)') "efficiency:",real(eff),"%"
+  write(u,*) " |---bin-left---|---bin-mid----|---bin-right--|---result-----|"
+  do i = 1, this%histsize
+    if(this%logplot) then
+      histL = this%histmin + (i-1)*this%histbin
+      histR = this%histmin + i*this%histbin
+      histM = (histL+histR)/2d0
+      write(u,'(4(es15.4))') histL,histM,histR,this%histdata(i)/this%histbin
+    else
+      histL = this%histmin + (i-1)*this%histbin
+      histR = this%histmin + i*this%histbin
+      histM = (histL+histR)/2d0
+      write(u,'(4(es15.4))') histL,histM,histR,this%histdata(i)/this%histbin
+    endif
+    this%total = this%total + this%histdata(i)
   enddo
-  write(u,*) 'integrated total:',this%total
-  write(u,*) new_line('a')
+  write(u,'(a,a,es15.4,a)') "integrated total:",tab,real(this%total),new_line("a")
   end subroutine printhist
-  
-end module histogram
-  
-  
-module bookkeep
-  
-  use nrtype
-  use histogram
-  implicit none
-  public
-  type(hist), dimension(:), allocatable :: book
-  integer(i1b) :: booksize
-  
-  contains
-  
-  subroutine initbook()
-  allocate(book(0))       ! dynamic book create
-  booksize = 0
-  end subroutine initbook
-  
-  subroutine newbook(i,l,s,n,hmin,hmax)
-  integer(i4b), intent(in) :: i,n
-  logical, intent(in) :: l
-  character(len=*), intent(in) :: s
-  real(sp), intent(in) :: hmin,hmax
-  type(hist) :: htemp
-  call htemp%seth(i,l,s,n,hmin,hmax)
-  book = [book,htemp]     ! dynamic vector push
-  booksize = booksize+1
-  end subroutine newbook
-  
-  subroutine fillbook(i,x,y)
-  integer(i4b), intent(in) :: i
-  real(sp), intent(in) :: x,y
-  integer(i4b) :: j
-  do j=1,booksize
-        if( book(j)%geti() .eq. i) then
-        call book(j)%fillh(x,y)
-        exit
-        endif
-  enddo
-  end subroutine fillbook
-  
-  subroutine printbook(u)
-  integer(i4b) u,i
-  do i = 1,booksize
-        call book(i)%printh(u)
-  enddo
-  end subroutine printbook
 
-end module bookkeep
+end module histogram
