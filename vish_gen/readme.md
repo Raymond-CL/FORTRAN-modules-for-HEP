@@ -51,3 +51,97 @@ gfortran -c -fno-strict-overflow -fno-align-commons JetOutput-0.8.for vint.f90 v
 - Current module uses generic format to output data. It can be modified to use binary or HDF5 as output, which can shrink the output file size and increase read speed. 
 However, this increase in efficiency might not be significant since the functino is very monotonic and smooth, and there's no need to use dense lattice grids.
 - We can also modify this module to read in other hydro profiles instead of the VISH 2+1D hydro. This can provide a diverse comparison of the quenching mechanism.
+
+## Step-by-step usage
+
+### get hydro initial and evolution codes from repositories
+
+We start by creating a working directory `hydro4jet` and clone the necessary repositories into the folder
+```bash
+mkdir hydro4jet
+cd hydro4jet
+gh repo clone chunshen1987/superMC
+gh repo clone chunshen1987/VISHNew
+```
+
+### generate initial collision profile using `superMC`
+
+We need to first generate an initial collision profile using `superMC`
+- Go to `superMC` directory
+- check `parameters.dat`
+- things to take note of:
+  -  `ecm` (collision energy)
+  -  `bmin`,`bmax` (to set centrality)
+  -  `nev` (test a few events first to see how long it takes)
+  -  `operation` (set to 3 for average)
+  -  `maxx`, `maxy` (default is -15fm to +15fm)
+- Run `superMC`
+```bash
+mkdir build
+cd build
+cmake ..
+make
+cp src/superMC.e ../
+cd ..
+mkdir data
+./superMC.e
+cd ..
+```
+
+### copy data from `superMC` to `VISHNew`
+```bash
+cp ./superMC/data/sdAvg_order_2_block.dat ./VISHNew/Initial/InitialSd.dat
+```
+
+### generate hydro profile using `VISHNew`
+- Go to `VISHNew` directory
+- check `Vishydro.inp`
+- things to take note of:
+  - `IInitialization` (set to 2 for reading initial profile from file)
+  - `IEin` (use 1 for entropy density)
+  - `lattice size` (default is 130, set to 150 to match `superMC` grid size)
+- Run `VISHNew`
+```bash
+mkdir build
+sed -i -e '41i    set (CMAKE_Fortran_FLAGS "-w")\' CMakeLists.txt
+cd build
+cmake ..
+make
+cp src/VISHNew.e ../
+cd ..
+mkdir results
+./VISHNew.e
+cd ..
+```
+
+### copy data from `VISHNew` to new directory for analysis
+```bash
+mkdir gen3Dtable
+cp ./VISHNew/results/JetCtl.dat ./gen3Dtable
+cp ./VISHNew/results/JetData.dat ./gen3Dtable
+cp ./VISHNew/src/JetOutput-0.8.for ./gen3Dtable
+cd gen3Dtable
+```
+
+### get `vish_gen` from this repository 
+```bash
+wget https://raw.githubusercontent.com/Raymond-CL/FORTRAN-modules-for-HEP/refs/heads/main/vint/vint.f90
+wget https://raw.githubusercontent.com/Raymond-CL/FORTRAN-modules-for-HEP/refs/heads/main/vish_gen/vish_gen.f90
+wget https://raw.githubusercontent.com/Raymond-CL/FORTRAN-modules-for-HEP/refs/heads/main/vish_gen/main.f90
+```
+
+### generate 3D table with `vish_gen`
+- things to take note of in `vish_gen.f90`:
+  - `tau0` (should be consistent with $\tau_0$ in `VISHNew`)
+  - `xyn`, `thn` (table size will be $(2\times xyn+1)\times(2\times xyn+1)\times thn$ )
+  - `Tc` (freeze-out temperature default using LQCD result from PRD, can be modified)
+  - `ncall` (MC numerical integration points, for integration accuracy) (1D integration with VEGAS is not so efficient, will modify in the future)
+  - results are set to print to output file every loop in $\theta$. One can insert an output to terminal message in the loop to check progress.
+- compile and run `vish_gen`
+```bash
+gfortran -c -fno-strict-overflow -fno-align-commons JetOutput-0.8.for vint.f90 vish_gen.f90 main.f90
+gfortran -o generate.exe *.o
+./generate.exe
+```
+- or replace last command with `nohup ./generate.exe &` to run in background
+- you can also check the output file `vish.dat` for progress if it is running in background
